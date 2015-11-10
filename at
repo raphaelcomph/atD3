@@ -1,0 +1,29 @@
+#!/usr/bin/env ruby
+require 'json'
+
+Dir["./who/*"]
+    .select  {|f| f.end_with? '.json' }
+    .collect {|f| {contents: File.readlines(f).join('\n'), path: f} }
+    .collect do |meta|
+        begin
+            { data: JSON.parse(meta[:contents]), path: meta[:path] }
+        rescue Exception => e
+            puts "Error parsing file #{meta[:path]}: #{e}"
+            nil
+        end
+    end
+    .reject {|r| r.nil? }
+    .each do |who|
+        catch :just_dont do
+            d = who[:data]
+            ['name', 'position'].each do |key|
+                unless d.has_key? key
+                    puts "#{who[:path]} missed key: #{key}"
+                    throw :just_dont
+                end
+            end
+            puts '-' * 80
+            puts "    Name: #{d['name']}"
+            puts "Position: #{d['position']}"
+        end
+    end
