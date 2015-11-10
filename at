@@ -13,7 +13,7 @@ Dir["./who/*"]
         end
     end
     .reject {|r| r.nil? }
-    .each do |who|
+    .collect do |who|
         catch :just_dont do
             d = who[:data]
             ['name', 'position'].each do |key|
@@ -22,8 +22,13 @@ Dir["./who/*"]
                     throw :just_dont
                 end
             end
-            puts '-' * 80
-            puts "    Name: #{d['name']}"
-            puts "Position: #{d['position']}"
+            d
         end
+    end
+    .reject {|r| r.nil? }
+    .sort(&:name)
+    .each do |d|
+        puts '-' * 80
+        puts "    Name: #{d['name']}"
+        puts "Position: #{d['position']}"
     end
