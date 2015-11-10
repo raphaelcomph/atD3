@@ -31,4 +31,6 @@ Dir["./who/*"]
         puts '-' * 80
         puts "    Name: #{d['name']}"
         puts "Position: #{d['position']}"
+        puts " Twitter: #{d['twitter']} (https://twitter.com/#{d['twitter'].sub('@', '')})" if d.has_key? 'twitter'
+        puts "  GitHub: #{d['github']} (https://github.com/#{d['github'].sub('@', '')})" if d.has_key? 'github'
     end
